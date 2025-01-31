@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "teste-spec-22"
+  description: "Artifacts generator via Spec."
+  annotations:
+    github.com/project-slug: overview-demo/teste-spec-22
+    backstage.io/techdocs-ref: dir:..
+    github.com/workflows: publish.yml,remove.yml
+    kong-manager/service-name: app.teste-spec-22.80
+    kong-manager/instance: cluster-overview-demo
+    kong-manager/spec : openapi-swagger.yaml
+    grafana/dashboard-selector: "teste-spec-22"
+    grafana/alert-label-selector: "alertname=teste-spec-22"        
+spec:
+  type: devops
+  lifecycle: experimental
+  owner: "group:default/admin"
+  providesApis:
+    - teste-spec-22

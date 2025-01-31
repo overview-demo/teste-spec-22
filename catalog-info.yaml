@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: teste-spec-22-location
+  description: Location to import all teste-spec-22 catalog components
+spec:
+  targets:
+    - ./.platform/*.yaml

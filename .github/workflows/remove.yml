@@ -1,0 +1,36 @@
+name: remove-project
+on: 
+  workflow_dispatch:
+
+env:
+  USERNAME: "ec2-user"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Write secret to file
+        run: |
+          echo "${{ secrets.KEYPAIR }}" > cert.pem
+          chmod 600 cert.pem
+
+      - name: Getting ec2 IP as HOST  		
+        run: |
+          HOST=`aws ec2 describe-instances --filters 'Name=tag:Name,Values=cluster-overview-demo' --output text --query 'Reservations[*].Instances[*].PublicIpAddress'`
+          echo "Host=$HOST" >> $GITHUB_ENV
+
+      - name: 
+        run: |
+          mkdir -p ~/.kube
+          scp -i ./cert.pem -o StrictHostKeyChecking=no $USERNAME@${{ env.Host }}:~/.kube/config ~/.kube/config
+          kubectl delete -f ./k8s/kubernetes.yaml -n app          
