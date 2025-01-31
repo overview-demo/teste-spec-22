@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    konghq.com/methods: GET
+    konghq.com/regex-priority: "100"
+    konghq.com/strip-path: "false"
+    konghq.com/tags: ""
+    konghq.com/preserve-host: "false"
+  name: teste-spec-22-ingress
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: teste-spec-22
+                port:
+                  number: 80
+            path: /~/teste-spec-22/ws/(?<zip_code>[^#?/]+)/json$
+            pathType: ImplementationSpecific
+      host: overview.platform.vee.codes
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    konghq.com/path: /
+    konghq.com/protocol: http
+  name: teste-spec-22
+spec:
+  type: ExternalName
+  externalName: viacep.com.br
+---
+
